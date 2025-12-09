@@ -18,16 +18,16 @@
         
         <div id="state-loading">
             <div class="spinner-border text-primary loader-ring mb-3" role="status"></div>
-            <h5 class="fw-bold">Checking Validation...</h5>
-            <p class="text-muted small">Please wait while we verify your session.</p>
+            <h5 class="fw-bold">Securing Connection...</h5>
+            <p class="text-muted small">Validating security parameters.</p>
         </div>
 
         <div id="state-success" class="d-none">
             <div class="mb-3">
-                <i class="bi bi-patch-check-fill text-success" style="font-size: 4rem;"></i>
+                <i class="bi bi-shield-fill-check text-success" style="font-size: 4rem;"></i>
             </div>
-            <h4 class="fw-bold text-success">Verified!</h4>
-            <p class="text-muted small mb-4">Your access token is ready.</p>
+            <h4 class="fw-bold text-success">Access Granted!</h4>
+            <p class="text-muted small mb-4">Security checks passed. Redirecting...</p>
             
             <div class="bg-light p-3 rounded mb-3 border border-success">
                 <small class="text-muted fw-bold d-block mb-1">YOUR TOKEN:</small>
@@ -43,11 +43,11 @@
 
         <div id="state-error" class="d-none">
             <div class="mb-3">
-                <i class="bi bi-x-octagon-fill text-danger" style="font-size: 4rem;"></i>
+                <i class="bi bi-shield-x text-danger" style="font-size: 4rem;"></i>
             </div>
-            <h5 class="fw-bold text-danger">Verification Failed</h5>
-            <p class="text-muted small mb-4">
-                You arrived here too quickly or without starting the process properly.
+            <h5 class="fw-bold text-danger">Access Denied</h5>
+            <p class="text-muted small mb-4" id="error-msg">
+                Invalid verification attempt.
             </p>
             <a href="token.html" class="btn btn-outline-danger rounded-pill px-4">Try Again</a>
         </div>
@@ -55,17 +55,18 @@
     </div>
 
     <script>
-        // --- KONFIGURASI WAKTU ---
-        const MIN_SECONDS = 15; // Minimal waktu (detik) user harus di shortlink
+        // --- KONFIGURASI KEAMANAN ---
+        const MIN_SECONDS = 15; // Waktu minimal (detik)
+        const SECRET_KEY = "KuroyamaSecure2025"; // HARUS SAMA dengan yang ada di Link Safelinku
         
         // Elemen DOM
         const stateLoading = document.getElementById('state-loading');
         const stateSuccess = document.getElementById('state-success');
         const stateError = document.getElementById('state-error');
+        const errorMsg = document.getElementById('error-msg');
         const tokenText = document.getElementById('token-text');
         const btnDeepLink = document.getElementById('btn-deep-link');
 
-        // Fungsi Generate Token
         function generateToken() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
             let result = "KYO-";
@@ -76,50 +77,60 @@
         }
 
         window.onload = function() {
-            // 1. Ambil waktu mulai dari memori
+            // Ambil Data
             const startTime = localStorage.getItem('auth_session_start');
-            
-            // Simulasi loading sebentar biar terlihat prosesnya
+            const urlParams = new URLSearchParams(window.location.search);
+            const authParam = urlParams.get('auth_key');
+
             setTimeout(() => {
                 stateLoading.classList.add('d-none');
 
-                // Validasi 1: Apakah user pernah klik tombol Start di token.html?
-                if (!startTime) {
+                // --- LAPIS 1: CEK MAGIC KEY (URL PARAMETER) ---
+                // Jika user membuka verify.html manual tanpa ?auth_key=..., langsung tolak.
+                if (authParam !== SECRET_KEY) {
+                    errorMsg.innerHTML = "Invalid Source URL.<br>You must complete the shortlink process.";
                     stateError.classList.remove('d-none');
                     return;
                 }
 
-                // Validasi 2: Hitung durasi
+                // --- LAPIS 2: CEK SESSION START ---
+                // Jika user tidak pernah klik tombol Start di token.html (tidak ada record waktu).
+                if (!startTime) {
+                    errorMsg.innerHTML = "Session not found.<br>Please start from the beginning.";
+                    stateError.classList.remove('d-none');
+                    return;
+                }
+
+                // --- LAPIS 3: CEK DURASI WAKTU ---
                 const currentTime = Date.now();
-                const duration = (currentTime - parseInt(startTime)) / 1000; // dalam detik
+                const duration = (currentTime - parseInt(startTime)) / 1000;
                 
-                console.log("Durasi user: " + duration + " detik");
+                console.log("Validation Time: " + duration + "s");
 
                 if (duration < MIN_SECONDS) {
-                    // JIKA TERLALU CEPAT (Bypass/Langsung paste link)
+                    // Terlalu cepat (bypass)
+                    errorMsg.innerHTML = "Suspicious activity detected.<br>Completion time too fast.";
                     stateError.classList.remove('d-none');
                 } else {
-                    // JIKA LOLOS VALIDASI
+                    // --- LOLOS SEMUA CEK ---
                     const finalToken = generateToken();
                     
-                    // Tampilkan Token
                     tokenText.textContent = finalToken;
                     
-                    // Set Deep Link
                     const deepLinkUrl = "myapp://verify?token=" + finalToken;
                     btnDeepLink.href = deepLinkUrl;
                     
                     stateSuccess.classList.remove('d-none');
-
-                    // Hapus sesi agar tidak bisa direfresh untuk dapet token baru
+                    
+                    // Hapus sesi (Burn after reading)
                     localStorage.removeItem('auth_session_start');
 
-                    // Otomatis buka aplikasi setelah 1.5 detik
+                    // Auto Redirect
                     setTimeout(() => {
                         window.location.href = deepLinkUrl;
                     }, 1500);
                 }
-            }, 1000);
+            }, 1500); // Fake delay 1.5 detik untuk efek "Checking..."
         };
     </script>
 </body>
