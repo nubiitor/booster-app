@@ -28,37 +28,58 @@
                     Click the button below to visit our sponsor link. You will be redirected back here automatically to get your token.
                 </p>
             </div>
-            <div class="d-grid">
+            <div class="d-grid mb-3">
                 <button id="btn-start" class="btn btn-primary btn-lg rounded-pill shadow-sm">
                     <i class="bi bi-box-arrow-up-right"></i> Start Verification
                 </button>
             </div>
+            <p class="small text-muted mb-0">
+                Total Visitors: <span id="view-counter-token">Loading...</span>
+            </p>
         </div>
     </div>
 
     <script>
         // --- KONFIGURASI PENTING ---
-        // Masukkan link SHORTLINK kamu di sini.
-        // PENTING: Saat membuat shortlink, set "Destination URL" shortlink-nya
-        // ke alamat: https://username-kamu.github.io/nama-repo/verify.html
-        const myShortlink = "https://sfl.gl/Rf6MkaE"; 
+        const myShortlink = "https://sfl.gl/Rf6MkaE";
 
         const btnStart = document.getElementById('btn-start');
 
         btnStart.addEventListener('click', function() {
-            // 1. Catat Waktu Mulai di LocalStorage browser
             localStorage.setItem('auth_session_start', Date.now());
-            
-            // 2. Ubah tampilan tombol biar user tau sedang proses
             btnStart.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
             btnStart.disabled = true;
-
-            // 3. Redirect ke Shortlink setelah jeda singkat
             setTimeout(() => {
                 window.location.href = myShortlink;
             }, 1000);
         });
     </script>
+
+    <!-- Visitor Counter (Token) -->
+    <script>
+        const COUNTER_NAMESPACE = "kuroyama-booster";
+        const COUNTER_KEY_TOKEN = "token_total";
+
+        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_TOKEN)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("view-counter-token").innerText = data.value;
+            })
+            .catch(() => {
+                document.getElementById("view-counter-token").innerText = "Error";
+            });
+    </script>
+
+    <!-- Proteksi ringan -->
+    <script>
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C"))) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
-
