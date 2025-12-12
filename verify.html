@@ -20,6 +20,9 @@
             <div class="spinner-border text-primary loader-ring mb-3" role="status"></div>
             <h5 class="fw-bold">Securing Connection...</h5>
             <p class="text-muted small">Validating security parameters.</p>
+            <p class="text-muted small mb-0">
+                Total Visitors: <span id="view-counter-verify">Loading...</span>
+            </p>
         </div>
 
         <div id="state-success" class="d-none">
@@ -56,10 +59,9 @@
 
     <script>
         // --- KONFIGURASI KEAMANAN ---
-        const MIN_SECONDS = 15; // Waktu minimal (detik)
-        const SECRET_KEY = "KuroyamaMLBoosterV45NEW"; // HARUS SAMA dengan yang ada di Link Safelinku
-        
-        // Elemen DOM
+        const MIN_SECONDS = 15;
+        const SECRET_KEY = "KuroyamaMLBoosterV45NEW";
+
         const stateLoading = document.getElementById('state-loading');
         const stateSuccess = document.getElementById('state-success');
         const stateError = document.getElementById('state-error');
@@ -77,7 +79,6 @@
         }
 
         window.onload = function() {
-            // Ambil Data
             const startTime = localStorage.getItem('auth_session_start');
             const urlParams = new URLSearchParams(window.location.search);
             const authParam = urlParams.get('auth_key');
@@ -85,53 +86,69 @@
             setTimeout(() => {
                 stateLoading.classList.add('d-none');
 
-                // --- LAPIS 1: CEK MAGIC KEY (URL PARAMETER) ---
-                // Jika user membuka verify.html manual tanpa ?auth_key=..., langsung tolak.
                 if (authParam !== SECRET_KEY) {
                     errorMsg.innerHTML = "Invalid Source URL.<br>You must complete the shortlink process.";
                     stateError.classList.remove('d-none');
                     return;
                 }
 
-                // --- LAPIS 2: CEK SESSION START ---
-                // Jika user tidak pernah klik tombol Start di token.html (tidak ada record waktu).
                 if (!startTime) {
                     errorMsg.innerHTML = "Session not found.<br>Please start from the beginning.";
                     stateError.classList.remove('d-none');
                     return;
                 }
 
-                // --- LAPIS 3: CEK DURASI WAKTU ---
                 const currentTime = Date.now();
                 const duration = (currentTime - parseInt(startTime)) / 1000;
                 
                 console.log("Validation Time: " + duration + "s");
 
                 if (duration < MIN_SECONDS) {
-                    // Terlalu cepat (bypass)
                     errorMsg.innerHTML = "Suspicious activity detected.<br>Completion time too fast.";
                     stateError.classList.remove('d-none');
                 } else {
-                    // --- LOLOS SEMUA CEK ---
                     const finalToken = generateToken();
-                    
                     tokenText.textContent = finalToken;
                     
                     const deepLinkUrl = "myapp://verify?token=" + finalToken;
                     btnDeepLink.href = deepLinkUrl;
                     
                     stateSuccess.classList.remove('d-none');
-                    
-                    // Hapus sesi (Burn after reading)
                     localStorage.removeItem('auth_session_start');
 
-                    // Auto Redirect
                     setTimeout(() => {
                         window.location.href = deepLinkUrl;
                     }, 1500);
                 }
-            }, 1500); // Fake delay 1.5 detik untuk efek "Checking..."
+            }, 1500);
         };
+    </script>
+
+    <!-- Visitor Counter (Verify) -->
+    <script>
+        const COUNTER_NAMESPACE = "kuroyama-booster";
+        const COUNTER_KEY_VERIFY = "verify_total";
+
+        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_VERIFY)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("view-counter-verify").innerText = data.value;
+            })
+            .catch(() => {
+                document.getElementById("view-counter-verify").innerText = "Error";
+            });
+    </script>
+
+    <!-- Proteksi ringan -->
+    <script>
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C"))) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
