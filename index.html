@@ -46,6 +46,9 @@
             <a href="token.html" class="btn btn-light btn-lg text-primary fw-bold shadow-lg px-5">
                 Start Verification
             </a>
+            <p class="mt-4 mb-0 small">
+                Total Visitors: <span id="view-counter-index">Loading...</span>
+            </p>
         </div>
     </header>
 
@@ -80,5 +83,32 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Visitor Counter (Index) -->
+    <script>
+        const COUNTER_NAMESPACE = "kuroyama-booster";
+        const COUNTER_KEY_INDEX = "index_total";
+
+        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_INDEX)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("view-counter-index").innerText = data.value;
+            })
+            .catch(() => {
+                document.getElementById("view-counter-index").innerText = "Error";
+            });
+    </script>
+
+    <!-- Proteksi ringan: blok klik kanan & F12 -->
+    <script>
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C"))) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
