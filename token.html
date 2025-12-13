@@ -34,7 +34,7 @@
                 </button>
             </div>
             <p class="small text-muted mb-0">
-                Total Visitors: <span id="view-counter-token">Loading...</span>
+                Total Visitors: <span id="visitor-count-token">Loading...</span>
             </p>
         </div>
     </div>
@@ -55,19 +55,19 @@
         });
     </script>
 
-    <!-- Visitor Counter (Token) -->
+    <!-- Visitor Counter -->
     <script>
-        const COUNTER_NAMESPACE = "kuroyama-booster";
-        const COUNTER_KEY_TOKEN = "token_total";
-
-        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_TOKEN)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("view-counter-token").innerText = data.value;
-            })
-            .catch(() => {
-                document.getElementById("view-counter-token").innerText = "Error";
-            });
+        (function () {
+            const domain = window.location.hostname;
+            fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(domain))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visitor-count-token').textContent = data.totalCount;
+                })
+                .catch(() => {
+                    document.getElementById('visitor-count-token').textContent = 'Error';
+                });
+        })();
     </script>
 
     <!-- Proteksi ringan -->
