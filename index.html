@@ -47,7 +47,7 @@
                 Start Verification
             </a>
             <p class="mt-4 mb-0 small">
-                Total Visitors: <span id="view-counter-index">Loading...</span>
+                Total Visitors: <span id="visitor-count-index">Loading...</span>
             </p>
         </div>
     </header>
@@ -84,22 +84,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Visitor Counter (Index) -->
+    <!-- Visitor Counter (global per domain) -->
     <script>
-        const COUNTER_NAMESPACE = "kuroyama-booster";
-        const COUNTER_KEY_INDEX = "index_total";
-
-        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_INDEX)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("view-counter-index").innerText = data.value;
-            })
-            .catch(() => {
-                document.getElementById("view-counter-index").innerText = "Error";
-            });
+        (function () {
+            const domain = window.location.hostname;
+            fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(domain))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visitor-count-index').textContent = data.totalCount;
+                })
+                .catch(() => {
+                    document.getElementById('visitor-count-index').textContent = 'Error';
+                });
+        })();
     </script>
 
-    <!-- Proteksi ringan: blok klik kanan & F12 -->
+    <!-- Proteksi ringan -->
     <script>
         document.addEventListener("contextmenu", function(e) {
             e.preventDefault();
