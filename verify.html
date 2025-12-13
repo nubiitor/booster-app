@@ -21,7 +21,7 @@
             <h5 class="fw-bold">Securing Connection...</h5>
             <p class="text-muted small">Validating security parameters.</p>
             <p class="text-muted small mb-0">
-                Total Visitors: <span id="view-counter-verify">Loading...</span>
+                Total Visitors: <span id="visitor-count-verify">Loading...</span>
             </p>
         </div>
 
@@ -124,19 +124,19 @@
         };
     </script>
 
-    <!-- Visitor Counter (Verify) -->
+    <!-- Visitor Counter -->
     <script>
-        const COUNTER_NAMESPACE = "kuroyama-booster";
-        const COUNTER_KEY_VERIFY = "verify_total";
-
-        fetch("https://api.countapi.xyz/hit/" + COUNTER_NAMESPACE + "/" + COUNTER_KEY_VERIFY)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("view-counter-verify").innerText = data.value;
-            })
-            .catch(() => {
-                document.getElementById("view-counter-verify").innerText = "Error";
-            });
+        (function () {
+            const domain = window.location.hostname;
+            fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(domain))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visitor-count-verify').textContent = data.totalCount;
+                })
+                .catch(() => {
+                    document.getElementById('visitor-count-verify').textContent = 'Error';
+                });
+        })();
     </script>
 
     <!-- Proteksi ringan -->
