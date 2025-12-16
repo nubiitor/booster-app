@@ -23,55 +23,85 @@
             transition: transform 0.3s;
             height: 100%;
         }
-        .feature-box:hover { transform: translateY(-10px); }
+        .feature-box:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .text-lead {
+            font-weight: 300;
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-rocket-takeoff"></i> KUROYAMA</a>
-            <div class="ms-auto">
-                <a href="token.html" class="btn btn-outline-primary rounded-pill">
-                    <i class="bi bi-key"></i> Generate Token
-                </a>
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="bi bi-rocket-takeoff-fill me-2"></i>Booster Official
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="token.html">Start Process</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <header class="hero text-center">
+    <div class="hero">
         <div class="container">
-            <h1 class="display-5 fw-bold mb-3">Mobile Legends Booster</h1>
-            <p class="lead mb-4 opacity-75">Optimize your network and device performance for a smoother gaming experience.</p>
-            <a href="token.html" class="btn btn-light btn-lg text-primary fw-bold shadow-lg px-5">
-                Start Verification
-            </a>
-            <p class="mt-4 mb-0 small">
-                Total Visitors: <span id="visitor-count-index">Loading...</span>
-            </p>
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="display-4 fw-bold mb-3">Optimize Your Account</h1>
+                    <p class="text-lead mb-4">The ultimate solution to enhance and secure your account with our proprietary system.</p>
+                    <a href="token.html" class="btn btn-warning btn-lg fw-bold shadow-lg">Start Optimization Now!</a>
+                </div>
+                <div class="col-lg-5 text-center d-none d-lg-block">
+                    <i class="bi bi-speedometer2" style="font-size: 8rem;"></i>
+                </div>
+            </div>
         </div>
-    </header>
+    </div>
 
-    <div class="container mb-5">
-        <div class="row g-4">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5 text-primary">Key Features</h2>
+        <div class="row g-4 mb-5">
             <div class="col-md-4">
                 <div class="feature-box text-center">
-                    <i class="bi bi-speedometer2 text-primary fs-1 mb-3"></i>
-                    <h5>Stable Ping</h5>
-                    <p class="text-muted small">Optimizing data packet routes for ultra-low latency.</p>
+                    <div class="icon-circle mx-auto"><i class="bi bi-shield-lock-fill"></i></div>
+                    <h5 class="fw-bold">High Security</h5>
+                    <p class="text-muted small">Our system uses advanced encryption to protect your data.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-box text-center">
-                    <i class="bi bi-cpu text-success fs-1 mb-3"></i>
-                    <h5>FPS Unlocker</h5>
-                    <p class="text-muted small">Unlock the maximum potential of your device's GPU.</p>
+                    <div class="icon-circle mx-auto"><i class="bi bi-clock-history"></i></div>
+                    <h5 class="fw-bold">Fast Process</h5>
+                    <p class="text-muted small">Quick and efficient optimization within minutes.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-box text-center">
-                    <i class="bi bi-shield-check text-warning fs-1 mb-3"></i>
-                    <h5>Anti-Ban System</h5>
+                    <div class="icon-circle mx-auto"><i class="bi bi-check-circle-fill"></i></div>
+                    <h5 class="fw-bold">Anti-Ban System</h5>
                     <p class="text-muted small">The latest security system for your account safety.</p>
                 </div>
             </div>
@@ -79,27 +109,16 @@
     </div>
 
     <footer class="text-center py-4 text-muted small">
-        &copy; 2025 Kuroyama Studio. Github Pages Version.
+        &copy; 2025 Kuroyama Studio. Github Pages Version. | Total Views: 
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>
+        </span>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Visitor Counter (global per domain) -->
-    <script>
-        (function () {
-            const domain = window.location.hostname;
-            fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(domain))
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('visitor-count-index').textContent = data.totalCount;
-                })
-                .catch(() => {
-                    document.getElementById('visitor-count-index').textContent = 'Error';
-                });
-        })();
-    </script>
-
-    <!-- Proteksi ringan -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
     <script>
         document.addEventListener("contextmenu", function(e) {
             e.preventDefault();
