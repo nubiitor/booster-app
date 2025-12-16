@@ -21,7 +21,7 @@
             <h5 class="fw-bold">Securing Connection...</h5>
             <p class="text-muted small">Validating security parameters.</p>
             <p class="text-muted small mb-0">
-                Total Visitors: <span id="visitor-count-verify">Loading...</span>
+                Total Visitors: <span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv">...</span></span>
             </p>
         </div>
 
@@ -58,7 +58,7 @@
     </div>
 
     <script>
-        // --- KONFIGURASI KEAMANAN ---
+        // --- KONFIGURASI KEAMANAN (TIDAK DIUBAH) ---
         const MIN_SECONDS = 15;
         const SECRET_KEY = "KuroyamaMLBoosterV45NEW";
 
@@ -124,22 +124,8 @@
         };
     </script>
 
-    <!-- Visitor Counter -->
-    <script>
-        (function () {
-            const domain = window.location.hostname;
-            fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(domain))
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('visitor-count-verify').textContent = data.totalCount;
-                })
-                .catch(() => {
-                    document.getElementById('visitor-count-verify').textContent = 'Error';
-                });
-        })();
-    </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
-    <!-- Proteksi ringan -->
     <script>
         document.addEventListener("contextmenu", function(e) {
             e.preventDefault();
